@@ -1,83 +1,56 @@
 # Autószerviz időpontfoglaló és munkakezelő rendszer
-| [Github](https://github.com/Scolwerz/SFM-project.git)  |  [Trello](https://trello.com/b/ZeqjQMMu/sfm-projekt) |
 
+Az alkalmazás ügyféloldali időpontfoglalást és szerelői ticketkezelést biztosít. A frontend sima HTML, CSS és JavaScript, az API Spring Boot, az adatbázis MySQL.
 
-## Információk
-**Név:** Autószerviz időpontfoglaló és munkakezelő rendszer
+## Indítás Dockerrel
 
-**Frontend:** HTML, CSS, JS, NGINX
+A projekt gyökérkönyvtárából:
 
-**Backend:** Java, Spring Boot
+```bash
+docker compose up --build
+```
 
-**Database:** MySQL, Spring Data JPA, Hibernate
+- Webalkalmazás: <http://localhost:3000>
+- Backend API: <http://localhost:8080/api>
+- MySQL: `localhost:3306`
 
-**Java version:** 17
+Demó belépési adatok:
 
-**Build:** Maven
+| Szerepkör | Felhasználónév / e-mail | Jelszó |
+|---|---|---|
+| Ügyfél | `ugyfel@auto.hu` | `ugyfel` |
+| Szerelő | `admin` | `admin` |
 
-**Deploy:** Docker
+A demó jelszavak az adatbázisban BCrypt hashként szerepelnek. Az első induláskor a backend létrehozza a táblákat és néhány katalógus-, felhasználó-, autó- és ticketadatot. A `database/init.sql` az adatbázist UTF-8 karakterkészlettel hozza létre; a táblákat a Hibernate kezeli.
 
-## Leírás
-Egy olyan webalkalmazás, amely egyszerűbbé és átláthatóbbá teszi az autószervizek időpontfoglalási és munkaszervezési folyamatait.
-Kezelőfelületet nyújt az ügyfelek számára online időpontot foglalására, valamint nyomon követhetik a javítás állapotát.
-Az autószerelők egy ticketkezelő rendszeren keresztül kezelhetik a beérkező munkákat, megtekinthetik a javításokhoz kapcsolódó információkat.
-Az autószervítben lévő alkatrészek leltározásában is segítséget nyújt.
+## Fő folyamatok
 
-## Fő Funkciók
+- Ügyfélregisztráció, bejelentkezés és profiladatok módosítása.
+- Mentett autók kezelése, szervizkatalógus és szolgáltatási időtartamok.
+- Hétköznapi, 08:00–17:00 közötti, 30 perces kezdési időpontok szerveroldali kapacitásellenőrzéssel.
+- Függő foglalás lemondása, szerelői ticketelfogadás és munkastátuszok kezelése.
+- Ügyfél-visszaigazolás, ticketkeresés, dashboardok és szerelői időpontlista.
 
-### Ügyfelek számára
-- Regisztráció és bejelentkezés.
-- Online időpont foglalás.
-- Lefoglalt időpontok megtekintése és kezelése.
-- A javítási munkák állapotának nyomon követése.
+Foglalás létrehozásakor a backend tranzakcióban zárolja a szolgáltatáskatalógust, így a párhuzamos foglalások kapacitásellenőrzése sorosított. A szerelői elfogadás ticketzárolással akadályozza meg a kettős hozzárendelést, az átfedő munkákat pedig szerelőnként ellenőrzi.
 
-### Autószerelők számára
-- Beérkező munkák és feladatok megtekintése.
-- Ticketek kezelése és állapotuk módosítása.
-- A folyamatban lévő és lezárt munkák áttekintése.
-- Elvégzett munkák nyilvántartása.
+Az alkatrészkészlet kezelőfelülete nincs implementálva.
 
-### Adminisztráció
-- Ügyfelek és járművek adatainak kezelése.
-- Időpontok és szervizmunkák kezelése.
-- Felhasználók és jogosultságok kezelése.
-- A szerviz munkafolyamatainak áttekintése.
+## Leállítás
 
-
-## Adatbázis-struktúra
-**MÉG NICNS IMPLEMENTÁLVA**
-
-## Alkalmazás futtatása
-A gyökér könyvtárból:
-   ```bash
-   docker compose up --build
-   ```
-A frontend a `http://localhost:3000`, a backend a `http://localhost:8080`, a MySQL adatbázis pedig a `localhost:3306` érhető el.
-
-### Leállítás:
 ```bash
 docker compose down
 ```
 
-The `mysql_data` named volume retains database data. To remove it too, run:
+Az adatbázis-kötetet az alábbi paranccsal lehet törölni (az adatbázis tartalma is törlődik):
+
 ```bash
 docker compose down -v
 ```
 
+## Projektstruktúra
 
-### Portok:
-|   Container   |   Port    |
-| ------------- | --------- |
-|   frontend    |   3000    |
-|   backend     |   8080    |
-|   mysql-db    |   3306    |
-
-
-## Jövőbeli fejlesztési lehetőségek
-- Automatikus e-mailes vagy egyéb értesítések küldése az időpontokról és a munkák állapotáról.
-- Online számlázás és fizetés integrálása.
-- Alkatrész- és készletnyilvántartás kialakítása.
-- Szervizelőzmények és javítási statisztikák megjelenítése.
-- Több autószerviz telephelyének támogatása.
-- Szerelői munkaterhelés és szervizkapacitás kezelése.
-- Naptárnézet és automatikus időpontütközés-ellenőrzés.
+- `frontend/html`, `frontend/css`, `frontend/js`: kliensfelület
+- `backend/autoszerviz/src/main/java/hu/unideb/autoszerviz/controller`: REST API
+- `backend/autoszerviz/src/main/java/hu/unideb/autoszerviz/entity`: JPA entitások és státuszok
+- `backend/autoszerviz/src/main/java/hu/unideb/autoszerviz/repository`: Spring Data repository-k
+- `backend/autoszerviz/src/main/java/hu/unideb/autoszerviz/model`: konfiguráció és induló adatok
