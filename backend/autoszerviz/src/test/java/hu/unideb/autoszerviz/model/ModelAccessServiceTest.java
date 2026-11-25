@@ -11,36 +11,36 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
 class ModelAccessServiceTest {
-  UserRepository users = mock(UserRepository.class);
-  ModelAccessService access = new ModelAccessService(users);
-  HttpSession session = mock(HttpSession.class);
+    UserRepository users = mock(UserRepository.class);
+    ModelAccessService access = new ModelAccessService(users);
+    HttpSession session = mock(HttpSession.class);
 
-  @Test
-  void currentUserResolvesSessionUser() {
-    AppUser user = new AppUser();
-    user.id = 3L;
-    when(session.getAttribute("uid")).thenReturn(3L);
-    when(users.findById(3L)).thenReturn(Optional.of(user));
-    assertSame(user, access.currentUser(session));
-  }
+    @Test
+    void currentUserResolvesSessionUser() {
+        AppUser user = new AppUser();
+        user.id = 3L;
+        when(session.getAttribute("uid")).thenReturn(3L);
+        when(users.findById(3L)).thenReturn(Optional.of(user));
+        assertSame(user, access.currentUser(session));
+    }
 
-  @Test
-  void currentUserRejectsMissingSessionUser() {
-    when(session.getAttribute("uid")).thenReturn(null);
-    assertThrows(ResponseStatusException.class, () -> access.currentUser(session));
-  }
+    @Test
+    void currentUserRejectsMissingSessionUser() {
+        when(session.getAttribute("uid")).thenReturn(null);
+        assertThrows(ResponseStatusException.class, () -> access.currentUser(session));
+    }
 
-  @Test
-  void requireRoleReturnsAllowedUser() {
-    AppUser user = new AppUser();
-    user.role = Role.CUSTOMER;
-    assertSame(user, access.requireRole(user, Role.CUSTOMER));
-  }
+    @Test
+    void requireRoleReturnsAllowedUser() {
+        AppUser user = new AppUser();
+        user.role = Role.CUSTOMER;
+        assertSame(user, access.requireRole(user, Role.CUSTOMER));
+    }
 
-  @Test
-  void requireRoleRejectsDisallowedUser() {
-    AppUser user = new AppUser();
-    user.role = Role.CUSTOMER;
-    assertThrows(ResponseStatusException.class, () -> access.requireRole(user, Role.ADMIN));
-  }
+    @Test
+    void requireRoleRejectsDisallowedUser() {
+        AppUser user = new AppUser();
+        user.role = Role.CUSTOMER;
+        assertThrows(ResponseStatusException.class, () -> access.requireRole(user, Role.ADMIN));
+    }
 }

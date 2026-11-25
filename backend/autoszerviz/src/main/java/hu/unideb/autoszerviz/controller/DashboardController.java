@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class DashboardController {
-  private final DashboardService service;
+    private final DashboardService service;
 
-  public DashboardController(DashboardService service) {
-    this.service = service;
-  }
+    public DashboardController(DashboardService service) {
+        this.service = service;
+    }
 
-  @GetMapping("/dashboard")
-  public Map<String, Object> dashboard(HttpSession s) {
-    return service.dashboard(s);
-  }
+    @GetMapping("/dashboard")
+    public Map<String, Object> dashboard(HttpSession s) {
+        return service.dashboard(s);
+    }
 }

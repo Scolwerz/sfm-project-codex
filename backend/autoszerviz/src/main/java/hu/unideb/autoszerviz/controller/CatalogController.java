@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class CatalogController {
-  private final CatalogService service;
+    private final CatalogService service;
 
-  public CatalogController(CatalogService service) {
-    this.service = service;
-  }
+    public CatalogController(CatalogService service) {
+        this.service = service;
+    }
 
-  @GetMapping("/catalog")
-  public Map<String, Object> catalog() {
-    return service.catalog();
-  }
-}
+    @GetMapping("/catalog")
+    public Map<String, Object> catalog() {
+        return service.catalog();
+    }
+    }

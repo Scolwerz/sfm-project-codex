@@ -10,61 +10,41 @@ import org.springframework.stereotype.Service;
 @Service
 public class CatalogService {
 
-  private final BrandRepository brands;
-  private final VehicleModelRepository models;
-  private final ServiceTypeRepository services;
+    private final BrandRepository brands;
+    private final VehicleModelRepository models;
+    private final ServiceTypeRepository services;
 
-  public CatalogService(
-      BrandRepository brands, VehicleModelRepository models, ServiceTypeRepository services) {
-    this.brands = brands;
-    this.models = models;
-    this.services = services;
-  }
+    public CatalogService( BrandRepository brands, VehicleModelRepository models, ServiceTypeRepository services) {
+        this.brands = brands;
+        this.models = models;
+        this.services = services;
+    }
 
-  public Map<String, Object> catalog() {
-    return Map.of(
-        "brands",
-        brands.findByActiveTrueOrderByName().stream()
-            .map(
-                b ->
-                    Map.of(
-                        "id",
-                        b.id,
-                        "name",
-                        b.name,
-                        "origin",
-                        b.originRegion == null ? "" : b.originRegion))
-            .toList(),
-        "models",
-        models.findAll().stream()
-            .filter(m -> m.active)
-            .map(
-                m ->
-                    Map.of(
-                        "id",
-                        m.id,
-                        "brandId",
-                        m.brand.id,
-                        "name",
-                        m.name,
-                        "fuel",
-                        m.fuelType == null ? "" : m.fuelType,
-                        "engine",
-                        m.engineType == null ? "" : m.engineType))
-            .toList(),
-        "services",
-        services.findByActiveTrueOrderByName().stream()
-            .map(
-                a ->
-                    Map.of(
-                        "id",
-                        a.id,
-                        "name",
-                        a.name,
-                        "description",
-                        a.description == null ? "" : a.description,
-                        "durationMinutes",
-                        a.durationMinutes))
-            .toList());
-  }
+    public Map<String, Object> catalog() {
+        return Map.of(
+            "brands", brands.findByActiveTrueOrderByName().stream()
+                .map(b -> Map.of(
+                    "id", b.id,
+                    "name", b.name,
+                    "origin", b.originRegion == null ? "" : b.originRegion))
+                .toList(),
+
+            "models", models.findAll().stream()
+                .filter(m -> m.active)
+                .map( m -> Map.of(
+                    "id", m.id,
+                    "brandId", m.brand.id,
+                    "name", m.name,
+                    "fuel", m.fuelType == null ? "" : m.fuelType,
+                    "engine", m.engineType == null ? "" : m.engineType))
+                .toList(),
+
+            "services", services.findByActiveTrueOrderByName().stream()
+                .map( a -> Map.of(
+                    "id", a.id,
+                    "name", a.name,
+                    "description", a.description == null ? "" : a.description,
+                    "durationMinutes", a.durationMinutes))
+                .toList());
+    }
 }

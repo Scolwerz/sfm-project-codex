@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ServiceTypeRepository extends JpaRepository<ServiceType, Long> {
-  List<ServiceType> findByActiveTrueOrderByName();
+    List<ServiceType> findByActiveTrueOrderByName();
 
-  @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("select s from ServiceType s order by s.id")
-  List<ServiceType> lockAllForBooking();
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select s from ServiceType s order by s.id")
+    List<ServiceType> lockAllForBooking();
 }

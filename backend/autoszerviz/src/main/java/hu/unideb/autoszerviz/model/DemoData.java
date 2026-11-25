@@ -11,14 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class DemoData {
   @Bean
-  CommandLineRunner seed(
-      UserRepository users,
-      BrandRepository brands,
-      VehicleModelRepository models,
-      VehicleRepository vehicles,
-      ServiceTypeRepository services,
-      TicketRepository tickets,
-      BCryptPasswordEncoder encoder) {
+  CommandLineRunner seed(UserRepository users, BrandRepository brands, VehicleModelRepository models, VehicleRepository vehicles, ServiceTypeRepository services, TicketRepository tickets, BCryptPasswordEncoder encoder) {
     return args -> {
       AppUser customer = users.findByEmailIgnoreCase("ugyfel@auto.hu").orElseGet(AppUser::new);
       customer.fullName = "Teszt Ügyfél";

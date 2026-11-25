@@ -10,23 +10,26 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ModelAccessService {
-  private final UserRepository users;
+    private final UserRepository users;
 
-  public ModelAccessService(UserRepository users) {
-    this.users = users;
-  }
+    public ModelAccessService(UserRepository users) {
+        this.users = users;
+    }
 
-  public AppUser currentUser(HttpSession session) {
-    Object id = session.getAttribute("uid");
-    if (!(id instanceof Long userId)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-    return users
-        .findById(userId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-  }
+    public AppUser currentUser(HttpSession session) {
+        Object id = session.getAttribute("uid");
+        if (!(id instanceof Long userId))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-  public AppUser requireRole(AppUser user, Role... allowed) {
-    if (Arrays.stream(allowed).noneMatch(role -> role == user.role))
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-    return user;
-  }
+        return users
+            .findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+    }
+
+    public AppUser requireRole(AppUser user, Role... allowed) {
+        if (Arrays.stream(allowed).noneMatch(role -> role == user.role))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
+        return user;
+    }
 }

@@ -6,27 +6,27 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 public class AppUser {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
 
-  @Column(name = "full_name", nullable = false)
-  public String fullName;
+    @Column(name = "full_name", nullable = false)
+    public String fullName;
 
-  @Column(nullable = false, unique = true)
-  public String email;
+    @Column(nullable = false, unique = true)
+    public String email;
 
-  @Column(name = "password_hash", nullable = false)
-  public String passwordHash;
+    @Column(name = "password_hash", nullable = false)
+    public String passwordHash;
 
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  public Role role = Role.CUSTOMER;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    public Role role = Role.CUSTOMER;
 
-  public boolean active = true;
+    public boolean active = true;
 
-  @Column(name = "created_at")
-  public LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at")
+    public LocalDateTime createdAt = LocalDateTime.now();
 
-  public AppUser() {}
+    public AppUser() {}
 }
