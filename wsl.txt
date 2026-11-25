@@ -1,0 +1,32 @@
+1. Ellenőrizd, fut-e más telepítő:
+Get-Process msiexec -ErrorAction SilentlyContinue
+
+Indítsd újra a Windows Installer szolgáltatást:
+Restart-Service msiserver -Force
+
+wsl --shutdown
+wsl --update
+
+MS Store nélkül:
+wsl --shutdown
+wsl --update --web-download
+
+
+
+wsl --list --verbose
+wsl --shutdown
+Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
+RESTART
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All -NoRestart
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All -NoRestart
+wsl --install
+
+
+
+Még mindig 1618:
+DISM /Online /Cleanup-Image /RestoreHealth
+sfc /scannow
+RESTART
+wsl --update --web-download
+
