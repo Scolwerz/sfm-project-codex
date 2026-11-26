@@ -98,7 +98,7 @@ public class TicketService {
         if (!user.id.equals(ticket.customer.id) || ticket.status != TicketStatus.AWAITING_CUSTOMER)
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Ez a munka nem vár visszaigazolásra.");
 
-        ticket.status = Boolean.TRUE.equals(b.get("approved")) ? TicketStatus.RESOLVED : TicketStatus.COMPLAINT;
+        ticket.status = Boolean.TRUE.equals(body.get("approved")) ? TicketStatus.RESOLVED : TicketStatus.COMPLAINT;
         
         return ticketMapper.toView(ticket);
     }
