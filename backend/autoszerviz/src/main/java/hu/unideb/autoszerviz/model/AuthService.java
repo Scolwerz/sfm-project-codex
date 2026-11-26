@@ -1,7 +1,7 @@
-package huser.unideb.autoszerviz.model;
+package hu.unideb.autoszerviz.model;
 
-import huser.unideb.autoszerviz.entity.*;
-import huser.unideb.autoszerviz.repository.*;
+import hu.unideb.autoszerviz.entity.*;
+import hu.unideb.autoszerviz.repository.*;
 import jakarta.servlet.http.HttpSession;
 import java.time.*;
 import java.util.*;
