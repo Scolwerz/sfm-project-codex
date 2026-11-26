@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 class CatalogControllerTest {
     @Test
     void delegatesCatalog() {
-        CatalogService s = mock(CatalogService.class);
-        CatalogController c = new CatalogController(s);
+        CatalogService service = mock(CatalogService.class);
+        CatalogController controller = new CatalogController(service);
         Map<String, Object> expected = Map.of("services", java.util.List.of());
-        when(s.catalog()).thenReturn(expected);
-        assertSame(expected, c.catalog());
-        verify(s).catalog();
+        when(service.catalog()).thenReturn(expected);
+        assertSame(expected, controller.catalog());
+        verify(service).catalog();
     }
 }

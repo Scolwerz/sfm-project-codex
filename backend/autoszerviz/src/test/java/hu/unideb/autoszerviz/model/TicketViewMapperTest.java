@@ -11,7 +11,7 @@ class TicketViewMapperTest {
 
     @Test
     void mapsTicketAndNestedCustomerVehicleAndService() {
-        AppUser customer = new AppUser();
+        User customer = new User();
         customer.id = 1L;
         customer.fullName = "Anna";
         customer.email = "a@b.hu";

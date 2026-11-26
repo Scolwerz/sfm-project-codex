@@ -15,7 +15,7 @@ public class DashboardController {
     }
 
     @GetMapping("/dashboard")
-    public Map<String, Object> dashboard(HttpSession s) {
-        return service.dashboard(s);
+    public Map<String, Object> dashboard(HttpSession session) {
+        return service.dashboard(session);
     }
 }

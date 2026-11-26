@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 class DashboardControllerTest {
     @Test
     void delegatesDashboard() {
-        DashboardService s = mock(DashboardService.class);
-        DashboardController c = new DashboardController(s);
-        HttpSession h = mock(HttpSession.class);
+        DashboardService service = mock(DashboardService.class);
+        DashboardController controller = new DashboardController(service);
+        HttpSession session = mock(HttpSession.class);
         Map<String, Object> expected = Map.of("active", 2);
-        when(s.dashboard(h)).thenReturn(expected);
-        assertSame(expected, c.dashboard(h));
-        verify(s).dashboard(h);
+        when(service.dashboard(session)).thenReturn(expected);
+        assertSame(expected, controller.dashboard(session));
+        verify(service).dashboard(session);
     }
 }

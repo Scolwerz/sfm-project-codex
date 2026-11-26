@@ -12,7 +12,7 @@ public class Ticket {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
-    public AppUser customer;
+    public User customer;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "vehicle_id")
@@ -24,7 +24,7 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "assigned_mechanic_id")
-    public AppUser mechanic;
+    public User mechanic;
 
     @Column(name = "start_at", nullable = false)
     public LocalDateTime startAt;

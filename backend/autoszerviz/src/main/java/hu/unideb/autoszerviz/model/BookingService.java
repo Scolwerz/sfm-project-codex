@@ -36,62 +36,65 @@ public class BookingService {
         this.tickets = tickets;
     }
 
-    public List<Map<String, Object>> mine(HttpSession s) {
-        AppUser u = access.currentUser(s);
-        access.requireRole(u, Role.CUSTOMER);
-        return tickets.findByCustomerIdOrderByStartAtDesc(u.id).stream()
+    public List<Map<String, Object>> mine(HttpSession session) {
+        User user = access.currentUser(session);
+        access.requireRole(user, Role.CUSTOMER);
+        return tickets.findByCustomerIdOrderByStartAtDesc(user.id).stream()
             .sorted(Comparator.comparingLong(t -> Math.abs(Duration.between(LocalDateTime.now(), t.startAt).toMinutes())))
             .map(ticketMapper::toView)
             .toList();
     }
 
-    public List<String> availability(Long serviceId, String date, HttpSession s) {
-        AppUser u = access.currentUser(s);
-        access.requireRole(u, Role.CUSTOMER);
+    public List<String> availability(Long serviceId, String date, HttpSession session) {
+        User user = access.currentUser(session);
+        access.requireRole(user, Role.CUSTOMER);
         ServiceType svc = services.findById(serviceId).orElseThrow();
         LocalDate d = LocalDate.parse(date);
         if (d.getDayOfWeek().getValue() > 5) return List.of();
 
-        long capacity = users.findAll().stream().filter(a -> a.active && a.role == Role.MECHANIC).count();
+        long capacity = users.findAll().stream().filter(mech -> mech.active && mech.role == Role.MECHANIC).count();
 
         List<String> slots = new ArrayList<>();
         for (LocalTime tm = LocalTime.of(8, 0); !tm.plusMinutes(svc.durationMinutes).isAfter(LocalTime.of(17, 0)); tm = tm.plusMinutes(30)) {
-            LocalDateTime start = d.atTime(tm), end = start.plusMinutes(svc.durationMinutes);
-            if (start.isBefore(LocalDateTime.now().plusHours(1))) continue;
+            LocalDateTime start = d.atTime(tm);
+            LocalDateTime end = start.plusMinutes(svc.durationMinutes);
+            if (start.isBefore(LocalDateTime.now().plusHours(1)))
+                continue;
 
             long used = tickets.findAll().stream()
                     .filter(t -> HOLDING.contains(t.status) && t.startAt.isBefore(end) && t.endAt.isAfter(start))
                     .count();
-            if (capacity > used) slots.add(tm.toString());
+            if (capacity > used)
+                slots.add(tm.toString());
         }
 
         return slots;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public Map<String, Object> create(Map<String, Object> b, HttpSession s) {
-        AppUser u = access.currentUser(s);
-        access.requireRole(u, Role.CUSTOMER);
-        Vehicle v = vehicles
-            .findByIdAndOwnerIdAndActiveTrue(Long.valueOf(b.get("vehicleId").toString()), u.id)
+    public Map<String, Object> create(Map<String, Object> body, HttpSession session) {
+        User user = access.currentUser(session);
+        access.requireRole(user, Role.CUSTOMER);
+        Vehicle vehicle = vehicles
+            .findByIdAndOwnerIdAndActiveTrue(Long.valueOf(body.get("vehicleId").toString()), user.id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Válassz saját járművet."));
 
         List<ServiceType> lockedServices = services.lockAllForBooking();
         ServiceType svc = lockedServices.stream()
-            .filter(x -> x.id.equals(Long.valueOf(b.get("serviceId").toString())))
+            .filter(x -> x.id.equals(Long.valueOf(body.get("serviceId").toString())))
             .findFirst()
             .orElseThrow();
 
-        LocalDateTime start = LocalDateTime.parse((String) b.get("startAt"));
+        LocalDateTime start = LocalDateTime.parse((String) body.get("startAt"));
         if (start.isBefore(LocalDateTime.now().plusHours(1))
                 || start.getDayOfWeek().getValue() > 5
                 || start.toLocalTime().isBefore(LocalTime.of(8, 0))
                 || start.toLocalTime().plusMinutes(svc.durationMinutes).isAfter(LocalTime.of(17, 0))
                 || start.getMinute() % 30 != 0)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Válassz legalább egy órával későbbi, hétköznapi," + " nyitvatartási időn belüli 30 perces kezdést.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Válassz legalább 1 órával korábbi, hétköznapi, nyitvatartási időn belüli időponmtot.");
         LocalDateTime end = start.plusMinutes(svc.durationMinutes);
 
-        long capacity = users.findAll().stream().filter(a -> a.active && a.role == Role.MECHANIC).count();
+        long capacity = users.findAll().stream().filter(mech -> mech.active && mech.role == Role.MECHANIC).count();
         if (capacity == 0
                 || tickets.findAll().stream()
                     .filter(t -> HOLDING.contains(t.status))
@@ -100,23 +103,23 @@ public class BookingService {
                 >= capacity)
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Erre az időpontra nincs szabad szervizkapacitás.");
     
-        Ticket t = new Ticket();
-        t.customer = u;
-        t.vehicle = v;
-        t.serviceType = svc;
-        t.startAt = start;
-        t.endAt = end;
-        t.description = (String) b.getOrDefault("description", "");
-        tickets.save(t);
-        return ticketMapper.toView(t);
+        Ticket ticket = new Ticket();
+        ticket.customer = user;
+        ticket.vehicle = vehicle;
+        ticket.serviceType = svc;
+        ticket.startAt = start;
+        ticket.endAt = end;
+        ticket.description = (String) body.getOrDefault("description", "");
+        tickets.save(ticket);
+        return ticketMapper.toView(ticket);
     }
 
     @Transactional
-    public void cancel(Long id, HttpSession s) {
-        AppUser u = access.currentUser(s);
-        Ticket t = tickets.lockById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (!u.id.equals(t.customer.id) || t.status != TicketStatus.PENDING)
+    public void cancel(Long id, HttpSession session) {
+        User user = access.currentUser(session);
+        Ticket ticket = tickets.lockById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!user.id.equals(ticket.customer.id) || ticket.status != TicketStatus.PENDING)
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Csak függőben lévő foglalás mondható le.");
-        t.status = TicketStatus.CANCELLED;
+        ticket.status = TicketStatus.CANCELLED;
     }
 }

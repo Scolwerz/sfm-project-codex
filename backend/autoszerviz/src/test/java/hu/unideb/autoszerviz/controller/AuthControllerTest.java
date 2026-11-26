@@ -12,7 +12,10 @@ class AuthControllerTest {
     AuthService service = mock(AuthService.class);
     AuthController controller = new AuthController(service);
     HttpSession session = mock(HttpSession.class);
-    Map<String, String> body = Map.of("name", "Test", "email", "t@e.st", "password", "password");
+    Map<String, String> body = Map.of(
+        "name", "Test",
+        "email", "t@e.st",
+        "password", "password");
 
     @Test
     void registerDelegates() {

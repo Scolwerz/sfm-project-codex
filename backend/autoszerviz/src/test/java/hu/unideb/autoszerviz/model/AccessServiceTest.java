@@ -17,7 +17,7 @@ class ModelAccessServiceTest {
 
     @Test
     void currentUserResolvesSessionUser() {
-        AppUser user = new AppUser();
+        User user = new User();
         user.id = 3L;
         when(session.getAttribute("uid")).thenReturn(3L);
         when(users.findById(3L)).thenReturn(Optional.of(user));
@@ -32,14 +32,14 @@ class ModelAccessServiceTest {
 
     @Test
     void requireRoleReturnsAllowedUser() {
-        AppUser user = new AppUser();
+        User user = new User();
         user.role = Role.CUSTOMER;
         assertSame(user, access.requireRole(user, Role.CUSTOMER));
     }
 
     @Test
     void requireRoleRejectsDisallowedUser() {
-        AppUser user = new AppUser();
+        User user = new User();
         user.role = Role.CUSTOMER;
         assertThrows(ResponseStatusException.class, () -> access.requireRole(user, Role.ADMIN));
     }

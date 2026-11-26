@@ -21,11 +21,11 @@ class TicketServiceTest {
     TicketRepository tickets = mock(TicketRepository.class);
     TicketService service = new TicketService(access, mapper, users, services, tickets);
     HttpSession session = mock(HttpSession.class);
-    AppUser mechanic;
+    User mechanic;
 
     @BeforeEach
     void setupMechanic() {
-        mechanic = new AppUser();
+        mechanic = new User();
         mechanic.id = 2L;
         mechanic.role = Role.MECHANIC;
         when(access.currentUser(session)).thenReturn(mechanic);
@@ -68,7 +68,7 @@ class TicketServiceTest {
 
     @Test
     void confirmsResolvedTicketWhenCustomerApproves() {
-        AppUser customer = new AppUser();
+        User customer = new User();
         customer.id = 1L;
         customer.role = Role.CUSTOMER;
         when(access.currentUser(session)).thenReturn(customer);
@@ -100,7 +100,7 @@ class TicketServiceTest {
 
     @Test
     void recordsCustomerComplaintWhenConfirmationIsDeclined() {
-        AppUser customer = new AppUser();
+        User customer = new User();
         customer.id = 1L;
         when(access.currentUser(session)).thenReturn(customer);
         Ticket ticket = new Ticket();

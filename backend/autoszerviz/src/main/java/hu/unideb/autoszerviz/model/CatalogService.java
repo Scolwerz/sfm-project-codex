@@ -14,7 +14,7 @@ public class CatalogService {
     private final VehicleModelRepository models;
     private final ServiceTypeRepository services;
 
-    public CatalogService( BrandRepository brands, VehicleModelRepository models, ServiceTypeRepository services) {
+    public CatalogService(BrandRepository brands, VehicleModelRepository models, ServiceTypeRepository services) {
         this.brands = brands;
         this.models = models;
         this.services = services;
@@ -31,7 +31,7 @@ public class CatalogService {
 
             "models", models.findAll().stream()
                 .filter(m -> m.active)
-                .map( m -> Map.of(
+                .map(m -> Map.of(
                     "id", m.id,
                     "brandId", m.brand.id,
                     "name", m.name,
@@ -40,11 +40,11 @@ public class CatalogService {
                 .toList(),
 
             "services", services.findByActiveTrueOrderByName().stream()
-                .map( a -> Map.of(
-                    "id", a.id,
-                    "name", a.name,
-                    "description", a.description == null ? "" : a.description,
-                    "durationMinutes", a.durationMinutes))
+                .map(svc -> Map.of(
+                    "id", svc.id,
+                    "name", svc.name,
+                    "description", svc.description == null ? "" : svc.description,
+                    "durationMinutes", svc.durationMinutes))
                 .toList());
     }
 }

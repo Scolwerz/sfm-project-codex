@@ -19,7 +19,7 @@ class DashboardServiceTest {
 
     @Test
     void summarizesCustomerBookingsAndVehicles() {
-        AppUser customer = new AppUser();
+        User customer = new User();
         customer.id = 1L;
         customer.role = Role.CUSTOMER;
         when(access.currentUser(session)).thenReturn(customer);
@@ -31,7 +31,7 @@ class DashboardServiceTest {
 
     @Test
     void summarizesMechanicIncomingTickets() {
-        AppUser mechanic = new AppUser();
+        User mechanic = new User();
         mechanic.id = 2L;
         mechanic.role = Role.MECHANIC;
         when(access.currentUser(session)).thenReturn(mechanic);
@@ -41,7 +41,7 @@ class DashboardServiceTest {
 
     @Test
     void countsIncomingActiveAndWaitingMechanicTickets() {
-        AppUser mechanic = new AppUser();
+        User mechanic = new User();
         mechanic.id = 2L;
         mechanic.role = Role.MECHANIC;
         when(access.currentUser(session)).thenReturn(mechanic);

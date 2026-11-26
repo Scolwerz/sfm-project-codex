@@ -15,27 +15,29 @@ public class AuthController {
     }
 
     @PostMapping("/auth/register")
-    public Map<String, Object> register(@RequestBody Map<String, String> b, HttpSession s) {
-        return service.register(b, s);
+    public Map<String, Object> register(@RequestBody Map<String, String> body, HttpSession session) {
+        return service.register(body, session);
     }
 
     @PostMapping("/auth/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> b, HttpSession s) {
-        return service.login(b, s);
+    public Map<String, Object> login(@RequestBody Map<String, String> body, HttpSession session) {
+        return service.login(body, session);
     }
 
     @PostMapping("/auth/logout")
-    public Map<String, String> logout(HttpSession s) {
-        return service.logout(s);
+    public Map<String, String> logout(HttpSession session) {
+        return service.logout(session);
     }
 
     @GetMapping("/auth/me")
-    public Map<String, Object> me(HttpSession s) {
-        return service.me(s);
+    public Map<String, Object> me(HttpSession session) {
+        return service.me(session);
     }
 
     @PutMapping("/profile")
-    public Map<String, Object> profile(@RequestBody Map<String, String> b, HttpSession s) {
-        return service.profile(b, s);
+    public Map<String, Object> profile(@RequestBody Map<String, String> body, HttpSession session) {
+        return service.profile(body, session);
     }
+
+
 }

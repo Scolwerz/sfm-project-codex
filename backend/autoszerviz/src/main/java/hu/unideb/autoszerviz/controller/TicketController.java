@@ -16,24 +16,22 @@ public class TicketController {
 
     @GetMapping("/tickets")
     public List<Map<String, Object>> list(
-        @RequestParam(required = false) String status, HttpSession s) {
-        return service.list(status, s);
+        @RequestParam(required = false) String status, HttpSession session) {
+        return service.list(status, session);
     }
 
     @GetMapping("/tickets/{id}")
-    public Map<String, Object> detail(@PathVariable Long id, HttpSession s) {
-        return service.detail(id, s);
+    public Map<String, Object> detail(@PathVariable Long id, HttpSession session) {
+        return service.detail(id, session);
     }
 
     @PutMapping("/tickets/{id}/status")
-    public Map<String, Object> status(
-        @PathVariable Long id, @RequestBody Map<String, String> b, HttpSession s) {
-        return service.status(id, b, s);
+    public Map<String, Object> status(@PathVariable Long id, @RequestBody Map<String, String> body, HttpSession session) {
+        return service.status(id, body, session);
     }
 
     @PutMapping("/tickets/{id}/confirm")
-    public Map<String, Object> confirm(
-        @PathVariable Long id, @RequestBody Map<String, Boolean> b, HttpSession s) {
-        return service.confirm(id, b, s);
+    public Map<String, Object> confirm(@PathVariable Long id, @RequestBody Map<String, Boolean> body, HttpSession session) {
+        return service.confirm(id, body, session);
     }
 }

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-public class AppUser {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
@@ -28,5 +28,5 @@ public class AppUser {
     @Column(name = "created_at")
     public LocalDateTime createdAt = LocalDateTime.now();
 
-    public AppUser() {}
+    public User() {}
 }

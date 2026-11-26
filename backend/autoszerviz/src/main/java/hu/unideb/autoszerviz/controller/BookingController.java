@@ -15,23 +15,23 @@ public class BookingController {
     }
 
     @GetMapping("/tickets/mine")
-    public List<Map<String, Object>> mine(HttpSession s) {
-        return service.mine(s);
+    public List<Map<String, Object>> mine(HttpSession session) {
+        return service.mine(session);
     }
 
     @GetMapping("/availability")
     public List<String> availability(
-        @RequestParam Long serviceId, @RequestParam String date, HttpSession s) {
-        return service.availability(serviceId, date, s);
+        @RequestParam Long serviceId, @RequestParam String date, HttpSession session) {
+        return service.availability(serviceId, date, session);
     }
 
     @PostMapping("/tickets")
-    public Map<String, Object> create(@RequestBody Map<String, Object> b, HttpSession s) {
-        return service.create(b, s);
+    public Map<String, Object> create(@RequestBody Map<String, Object> body, HttpSession session) {
+        return service.create(body, session);
     }
 
     @DeleteMapping("/tickets/{id}")
-    public void cancel(@PathVariable Long id, HttpSession s) {
-        service.cancel(id, s);
+    public void cancel(@PathVariable Long id, HttpSession session) {
+        service.cancel(id, session);
     }
 }

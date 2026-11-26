@@ -12,61 +12,61 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class VehicleService {
 
-    private final ModelAccessService access;
+    private final AccessService access;
     private final BrandRepository brands;
     private final VehicleModelRepository models;
     private final VehicleRepository vehicles;
 
-    public VehicleService(ModelAccessService access, BrandRepository brands, VehicleModelRepository models, VehicleRepository vehicles) {
+    public VehicleService(AccessService access, BrandRepository brands, VehicleModelRepository models, VehicleRepository vehicles) {
         this.access = access;
         this.brands = brands;
         this.models = models;
         this.vehicles = vehicles;
     }
 
-    public List<Map<String, Object>> myVehicles(HttpSession s) {
-        AppUser u = access.currentUser(s);
-        access.requireRole(u, Role.CUSTOMER);
-        return vehicles.findByOwnerIdAndActiveTrueOrderByIdDesc(u.id).stream()
-            .map(v -> Map.<String, Object>of(
-                "id", v.id,
-                "brandId", v.brand.id,
-                "brand", v.brand.name,
-                "origin", v.brand.originRegion == null ? "" : v.brand.originRegion,
-                "modelId", v.model.id,
-                "model", v.model.name,
-                "year", v.year,
-                "fuel", v.fuel == null ? "" : v.fuel,
-                "engine", v.engine == null ? "" : v.engine,
-                "licensePlate", v.licensePlate == null ? "" : v.licensePlate))
+    public List<Map<String, Object>> myVehicles(HttpSession session) {
+        User user = access.currentUser(session);
+        access.requireRole(user, Role.CUSTOMER);
+        return vehicles.findByOwnerIdAndActiveTrueOrderByIdDesc(user.id).stream()
+            .map(vehicle -> Map.<String, Object>of(
+                "id", vehicle.id,
+                "brandId", vehicle.brand.id,
+                "brand", vehicle.brand.name,
+                "origin", vehicle.brand.originRegion == null ? "" : vehicle.brand.originRegion,
+                "modelId", vehicle.model.id,
+                "model", vehicle.model.name,
+                "year", vehicle.year,
+                "fuel", vehicle.fuel == null ? "" : vehicle.fuel,
+                "engine", vehicle.engine == null ? "" : vehicle.engine,
+                "licensePlate", vehicle.licensePlate == null ? "" : vehicle.licensePlate))
             .toList();
     }
 
-    public Map<String, Object> addVehicle(Map<String, Object> b, HttpSession s) {
-        AppUser u = access.currentUser(s);
-        access.requireRole(u, Role.CUSTOMER);
+    public Map<String, Object> addVehicle(Map<String, Object> body, HttpSession session) {
+        User user = access.currentUser(session);
+        access.requireRole(user, Role.CUSTOMER);
 
-        Vehicle v = new Vehicle();
-        v.owner = u;
-        v.brand = brands.findById(Long.valueOf(b.get("brandId").toString())).orElseThrow();
-        v.model = models.findById(Long.valueOf(b.get("modelId").toString())).orElseThrow();
-        if (!v.model.brand.id.equals(v.brand.id))
+        Vehicle vehicle = new Vehicle();
+        vehicle.owner = user;
+        vehicle.brand = brands.findById(Long.valueOf(body.get("brandId").toString())).orElseThrow();
+        vehicle.model = models.findById(Long.valueOf(body.get("modelId").toString())).orElseThrow();
+        if (!vehicle.model.brand.id.equals(vehicle.brand.id))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A modell nem ehhez a márkához tartozik.");
-        v.year = Integer.parseInt(b.get("year").toString());
-        v.fuel = (String) b.get("fuel");
-        v.engine = (String) b.getOrDefault("engine", "");
-        v.licensePlate = (String) b.getOrDefault("licensePlate", "");
-        vehicles.save(v);
-        return Map.of("id", v.id);
+        vehicle.year = Integer.parseInt(body.get("year").toString());
+        vehicle.fuel = (String) body.get("fuel");
+        vehicle.engine = (String) body.getOrDefault("engine", "");
+        vehicle.licensePlate = (String) body.getOrDefault("licensePlate", "");
+        vehicles.save(vehicle);
+        return Map.of("id", vehicle.id);
     }
 
-    public void deleteVehicle(Long id, HttpSession s) {
-        AppUser u = access.currentUser(s);
-        access.requireRole(u, Role.CUSTOMER);
-        Vehicle v = vehicles
-            .findByIdAndOwnerIdAndActiveTrue(id, u.id)
+    public void deleteVehicle(Long id, HttpSession session) {
+        User user = access.currentUser(session);
+        access.requireRole(user, Role.CUSTOMER);
+        Vehicle vehicle = vehicles
+            .findByIdAndOwnerIdAndActiveTrue(id, user.id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        v.active = false;
-        vehicles.save(v);
+        vehicle.active = false;
+        vehicles.save(vehicle);
     }
 }

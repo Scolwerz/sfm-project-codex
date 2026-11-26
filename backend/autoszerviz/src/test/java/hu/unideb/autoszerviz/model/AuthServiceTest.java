@@ -18,13 +18,13 @@ class AuthServiceTest {
     ModelAccessService access = mock(ModelAccessService.class);
     HttpSession session = mock(HttpSession.class);
     AuthService service = new AuthService(users, encoder, access);
-    AppUser customer;
+    User customer;
 
     @BeforeEach
     void initCustomer() {
-        customer = new AppUser();
+        customer = new User();
         customer.id = 9L;
-        customer.fullName = "Minta Anna";
+        customer.fullName = "Kovács Anna";
         customer.email = "anna@example.com";
         customer.passwordHash = "hash";
         customer.role = Role.CUSTOMER;
@@ -39,8 +39,8 @@ class AuthServiceTest {
         when(users.findByEmailIgnoreCase("anna@example.com")).thenReturn(Optional.empty());
         when(encoder.encode("password1")).thenReturn("encoded");
         when(users.save(any()))
-            .thenAnswer(invocation -> {
-                AppUser value = invocation.getArgument(0);
+            .thenAnswer(a -> {
+                User value = a.getArgument(0);
                 value.id = 9L;
                 return value;
             });
@@ -74,7 +74,7 @@ class AuthServiceTest {
             "password", "password1");
         when(users.findByEmailIgnoreCase(customer.email)).thenReturn(Optional.of(customer));
         when(encoder.matches("password1", "hash")).thenReturn(true);
-        assertEquals("Minta Anna", service.login(body, session).get("name"));
+        assertEquals("Kovács Anna", service.login(body, session).get("name"));
         verify(session).setAttribute("uid", 9L);
     }
 
@@ -103,9 +103,9 @@ class AuthServiceTest {
         when(users.save(customer)).thenReturn(customer);
         when(encoder.encode("newpass1")).thenReturn("new-hash");
         Map<String, String> body = Map.of(
-            "name", "Anna Kovács",
+            "name", "Anna NemKovács",
             "password", "newpass1");
-        assertEquals("Anna Kovács", service.profile(body, session).get("name"));
+        assertEquals("Anna NemKovács", service.profile(body, session).get("name"));
         assertEquals("new-hash", customer.passwordHash);
     }
 

@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class ModelAccessService {
+public class AccessService {
     private final UserRepository users;
 
-    public ModelAccessService(UserRepository users) {
+    public AccessService(UserRepository users) {
         this.users = users;
     }
 
-    public AppUser currentUser(HttpSession session) {
+    public User currentUser(HttpSession session) {
         Object id = session.getAttribute("uid");
         if (!(id instanceof Long userId))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -26,10 +26,11 @@ public class ModelAccessService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
     }
 
-    public AppUser requireRole(AppUser user, Role... allowed) {
+    public User requireRole(User user, Role... allowed) {
         if (Arrays.stream(allowed).noneMatch(role -> role == user.role))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         return user;
     }
+
 }

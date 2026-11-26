@@ -19,13 +19,13 @@ class VehicleServiceTest {
     VehicleRepository vehicles = mock(VehicleRepository.class);
     VehicleService service = new VehicleService(access, brands, models, vehicles);
     HttpSession session = mock(HttpSession.class);
-    AppUser customer;
+    User customer;
     Brand brand;
     VehicleModel model;
 
     @BeforeEach
     void configureCustomerAndCatalog() {
-        customer = new AppUser();
+        customer = new User();
         customer.id = 1L;
         customer.role = Role.CUSTOMER;
         brand = new Brand();

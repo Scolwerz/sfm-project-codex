@@ -22,12 +22,12 @@ class BookingServiceTest {
     TicketRepository tickets = mock(TicketRepository.class);
     BookingService service = new BookingService(access, mapper, users, vehicles, services, tickets);
     HttpSession session = mock(HttpSession.class);
-    AppUser customer;
+    User customer;
     ServiceType oilService;
 
     @BeforeEach
     void setupCustomerAndService() {
-        customer = new AppUser();
+        customer = new User();
         customer.id = 1L;
         customer.role = Role.CUSTOMER;
         oilService = new ServiceType();
@@ -51,7 +51,7 @@ class BookingServiceTest {
     @Test
     void returnsOpenSlotsOnAWeekday() {
         when(services.findById(3L)).thenReturn(Optional.of(oilService));
-        AppUser mechanic = new AppUser();
+        User mechanic = new User();
         mechanic.active = true;
         mechanic.role = Role.MECHANIC;
         when(users.findAll()).thenReturn(List.of(mechanic));
@@ -83,7 +83,7 @@ class BookingServiceTest {
         when(services.lockAllForBooking()).thenReturn(List.of(oilService));
         when(users.findAll())
             .thenReturn( List.of(
-                new AppUser() {
+                new User() {
                     {
                         active = true;
                         role = Role.MECHANIC;

@@ -12,7 +12,7 @@ public class Vehicle {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "owner_id")
-    public AppUser owner;
+    public User owner;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "brand_id")

@@ -15,17 +15,17 @@ public class VehicleController {
     }
 
     @GetMapping("/vehicles")
-    public List<Map<String, Object>> myVehicles(HttpSession s) {
-        return service.myVehicles(s);
+    public List<Map<String, Object>> myVehicles(HttpSession session) {
+        return service.myVehicles(session);
     }
 
     @PostMapping("/vehicles")
-    public Map<String, Object> addVehicle(@RequestBody Map<String, Object> b, HttpSession s) {
-        return service.addVehicle(b, s);
+    public Map<String, Object> addVehicle(@RequestBody Map<String, Object> body, HttpSession session) {
+        return service.addVehicle(body, session);
     }
 
     @DeleteMapping("/vehicles/{id}")
-    public void deleteVehicle(@PathVariable Long id, HttpSession s) {
-        service.deleteVehicle(id, s);
+    public void deleteVehicle(@PathVariable Long id, HttpSession session) {
+        service.deleteVehicle(id, session);
     }
 }
