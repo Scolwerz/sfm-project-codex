@@ -20,14 +20,14 @@ public class BookingService {
                                     TicketStatus.WAITING_FOR_PARTS,
                                     TicketStatus.AWAITING_CUSTOMER);
 
-    private final ModelAccessService access;
+    private final AccessService access;
     private final TicketViewMapper ticketMapper;
     private final UserRepository users;
     private final VehicleRepository vehicles;
     private final ServiceTypeRepository services;
     private final TicketRepository tickets;
 
-    public BookingService(ModelAccessService access, TicketViewMapper ticketMapper, UserRepository users, VehicleRepository vehicles, ServiceTypeRepository services, TicketRepository tickets) {
+    public BookingService(AccessService access, TicketViewMapper ticketMapper, UserRepository users, VehicleRepository vehicles, ServiceTypeRepository services, TicketRepository tickets) {
         this.access = access;
         this.ticketMapper = ticketMapper;
         this.users = users;
