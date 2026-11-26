@@ -13,7 +13,7 @@ public class DemoData {
   @Bean
   CommandLineRunner seed(UserRepository users, BrandRepository brands, VehicleModelRepository models, VehicleRepository vehicles, ServiceTypeRepository services, TicketRepository tickets, BCryptPasswordEncoder encoder) {
     return args -> {
-      AppUser customer = users.findByEmailIgnoreCase("ugyfel@auto.hu").orElseGet(AppUser::new);
+      User customer = users.findByEmailIgnoreCase("ugyfel@auto.hu").orElseGet(User::new);
       customer.fullName = "Teszt Ügyfél";
       customer.email = "ugyfel@auto.hu";
       customer.role = Role.CUSTOMER;
@@ -21,7 +21,7 @@ public class DemoData {
       if (customer.passwordHash == null || !customer.passwordHash.startsWith("$2"))
         customer.passwordHash = encoder.encode("ugyfel");
       users.save(customer);
-      AppUser mechanic = users.findByEmailIgnoreCase("admin").orElseGet(AppUser::new);
+      User mechanic = users.findByEmailIgnoreCase("admin").orElseGet(User::new);
       mechanic.fullName = "Autószerelő Admin";
       mechanic.email = "admin";
       mechanic.role = Role.MECHANIC;
