@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class DashboardServiceTest {
-    ModelAccessService access = mock(ModelAccessService.class);
+    AccessService access = mock(AccessService.class);
     TicketViewMapper mapper = mock(TicketViewMapper.class);
     TicketRepository tickets = mock(TicketRepository.class);
     VehicleRepository vehicles = mock(VehicleRepository.class);

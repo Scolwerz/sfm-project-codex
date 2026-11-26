@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
 class VehicleServiceTest {
-    ModelAccessService access = mock(ModelAccessService.class);
+    AccessService access = mock(AccessService.class);
     BrandRepository brands = mock(BrandRepository.class);
     VehicleModelRepository models = mock(VehicleModelRepository.class);
     VehicleRepository vehicles = mock(VehicleRepository.class);

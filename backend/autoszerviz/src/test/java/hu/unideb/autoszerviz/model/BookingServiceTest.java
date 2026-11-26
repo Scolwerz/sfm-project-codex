@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
 class BookingServiceTest {
-    ModelAccessService access = mock(ModelAccessService.class);
+    AccessService access = mock(AccessService.class);
     TicketViewMapper mapper = mock(TicketViewMapper.class);
     UserRepository users = mock(UserRepository.class);
     VehicleRepository vehicles = mock(VehicleRepository.class);
