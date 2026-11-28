@@ -102,7 +102,7 @@ public class BookingService {
         for (LocalTime startTime = OPENING_TIME; !startTime.plusMinutes(svc.durationMinutes).isAfter(CLOSING_TIME); startTime = startTime.plusMinutes(SLOT_INTERVAL_MINUTES)) {
             LocalDateTime start = selectedDate.atTime(startTime);
             LocalDateTime end = start.plusMinutes(svc.durationMinutes);
-            if (isTooSoon(start, now))
+            if (isTooSoon(start))
                 continue;
 
             long reserved = existingTickets.stream()
