@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class TicketService {
-  private static final List<TicketStatus> BLOCKING = List.of(
+    private static final List<TicketStatus> BLOCKING_STATUSES = List.of(
                                 TicketStatus.ACCEPTED,
                                 TicketStatus.IN_PROGRESS,
                                 TicketStatus.WAITING_FOR_PARTS,
@@ -112,6 +112,7 @@ public class TicketService {
                                 || (ticket.mechanic != null && user.id.equals(ticket.mechanic.id)))
                 .toList();
     }
+
 
 
 

@@ -44,7 +44,6 @@ public class BookingService {
     }
 
 
-
     private boolean isWeekend(LocalDate date) { return date.getDayOfWeek().getValue() > LAST_WORKDAY; }
     private boolean isOutsideWorkingHours(LocalDateTime start, ServiceType svc) {
         LocalTime end = start.toLocalTime().plusMinutes(svc.durationMinutes);
@@ -65,6 +64,8 @@ public class BookingService {
                 .filter(user -> user.active && user.role == Role.MECHANIC)
                 .count();
     }
+
+
 
 
 
@@ -95,7 +96,7 @@ public class BookingService {
 
         LocalDateTime now = LocalDateTime.now();
         List<Ticket> existingTickets = tickets.findAll().stream()
-                .filter(ticket -> ACTIVE_BOOKING_STATUSES.contains(ticket.status))
+                .filter(ticket -> RESERVED_BOOKING_STATUSES.contains(ticket.status))
                 .toList();
         List<String> availableSlots = new ArrayList<>();
         for (LocalTime startTime = OPENING_TIME; !startTime.plusMinutes(svc.durationMinutes).isAfter(CLOSING_TIME); startTime = startTime.plusMinutes(SLOT_INTERVAL_MINUTES)) {

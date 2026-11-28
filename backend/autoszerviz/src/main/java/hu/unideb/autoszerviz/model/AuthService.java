@@ -106,7 +106,7 @@ public class AuthService {
     public Map<String, Object> profile(Map<String, String> body, HttpSession session) {
         User user = access.currentUser(session);
         String name = body.getOrDefault("name", user.fullName).trim();
-        String pass = body.get("password");
+        String password = body.get("password");
         
         validateName(name);
         user.fullName = name;
